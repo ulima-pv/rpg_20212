@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     public float speed;
     public MenuManager menuManager;
+    public float Health { get; set; }
 
     private float movementX;
     private float movementY;
@@ -14,6 +15,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        Health = 3f;
         CanMove = true;
         // Nos vamos a inscribir como observadores de MenuManager (OnMenuOpenEvent)
         menuManager.OnMenuOpenEvent += MenuManager_OnMenuOpenEvent;
@@ -44,8 +46,19 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("Se inicia el dialogo");
-        CanMove = false;
-        DialogueManager.Instance.StartDialogue(0);
+        if (collision.transform.CompareTag("Character"))
+        {
+            Debug.Log("Se inicia el dialogo");
+            CanMove = false;
+            DialogueManager.Instance.StartDialogue(0);
+        }
+        
+    }
+
+    public void Heal(float amount, bool boost)
+    {
+        if (boost) Health = 3f;
+        Health += amount;
+        Debug.Log($"Player Health: {Health}");
     }
 }
